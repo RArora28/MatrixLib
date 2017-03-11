@@ -8,7 +8,7 @@
 
 template <class ElementType>
 class Matrix {
-	public:
+public:
 	int row_size, col_size;
 	std::vector< std::vector <ElementType > > mat;
 	Matrix(void) {}
@@ -53,6 +53,21 @@ inline Matrix<ElementType> operator*(const Matrix<ElementType> &M1, const Matrix
         }
     }
     return res;
+}
+
+template <class ElementType>
+inline void operator+=(Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
+	//to check wheter the matrices have same dimensions
+	assert(M1.row_size == M2.row_size);
+	assert(M1.col_size == M2.col_size);
+	//assert(std::is_integral<ElementType>::value||std::is_floating_point<ElementType>::value||std::izs_integral<ElementType>::value);
+	//alocating O(row*col) additional memory to find the resultant
+	for(int i = 0; i < M1.row_size; i++) {
+		for(int j = 0; j < M1.col_size; j++) {
+			M1.mat[i][j] = M1.mat[i][j] + M2.mat[i][j];
+		}
+	}
+	return;
 }
 
 #endif
