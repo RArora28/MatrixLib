@@ -15,8 +15,6 @@ public:
 	Matrix (const unsigned int r_s, const unsigned int c_s);
 	Matrix (const Matrix<ElementType> &M);
 
-	//Matrix<ElementType> & operator = (const Matrix<ElementType> &);
-
 	ElementType getVal(const unsigned int row, const unsigned int col);
 	ElementType setVal(const unsigned int row, const unsigned int col, const ElementType value);
 	unsigned int getRowSize();
@@ -75,26 +73,6 @@ Matrix<ElementType>::~Matrix () {
 	mat.clear();
 } 
 
-//class operators
-// template <class ElementType>
-// Matrix<ElementType>& Matrix<ElementType>::operator = (const Matrix<ElementType> &M) {
-//     for(unsigned int i = 0; i < row_size; i++) {
-//     	mat[i].clear();
-//     }
-//     mat.clear();
-//     row_size = M.row_size;
-//     col_size = M.col_size;
-//     mat.resize(row_size);
-//     for(unsigned int i = 0; i < row_size; i++) {
-//     	mat[i].resize(col_size);
-//     }
-//     for(unsigned int i = 0; i < row_size; i++) {
-//     	for(unsigned int j = 0; j < col_size; j++) {
-//     		mat[i][j] = M.getVal(i, j);
-//     	}
-//     }
-//     return *this;
-// }
 
 //class functions
 template <class ElementType>
