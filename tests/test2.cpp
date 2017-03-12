@@ -19,6 +19,7 @@
 #include <limits.h>
 #include <cmath>
 
+
 BOOST_AUTO_TEST_SUITE(Constructor)
 BOOST_AUTO_TEST_CASE (constructors_working) {
 	//empty constructor
@@ -170,11 +171,12 @@ BOOST_AUTO_TEST_CASE (Matrix_Sum_complex) {
 		for(int j = 0; j < TestMatrix4.col_size; j++) {
 			//taking a precision error of 1e-13
 			BOOST_CHECK(fabs(TestMatrix4.mat[i][j].real() - TestMatrix3.mat[i][j].real()) <= 1e-13);
-			BOOST_CHECK(fabs(TestMatrix4.mat[i][j].real() - TestMatrix3.mat[i][j].real()) <= 1e-13);
+			BOOST_CHECK(fabs(TestMatrix4.mat[i][j].imag() - TestMatrix3.mat[i][j].imag()) <= 1e-13);
 		}
 	}	
 }
 BOOST_AUTO_TEST_SUITE_END()
+
 
 
 BOOST_AUTO_TEST_SUITE(Matrix_Multiplication)
