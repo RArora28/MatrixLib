@@ -46,8 +46,8 @@ BOOST_AUTO_TEST_CASE (constructors_working) {
 	// }
 	for(unsigned int i = 0; i < 2; i++) {
 		for(unsigned int j = 0; j < 2; j++) {
-			BOOST_CHECK(TestMatrix3.getVal(i, j) == TestMatrix4.getVal(i, j));
-		}
+			//std::cout << TestMatrix4.getVal(i, j) << ' ' << TestMatrix3.getVal(i, j) << std::endl;
+			BOOST_CHECK(TestMatrix3.getVal(i, j) == TestMatrix4.getVal(i, j));		}
 	}
 }
 BOOST_AUTO_TEST_SUITE_END()
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE (Matrix_Sum_Int) {
 	for(unsigned int i = 0; i < TestMatrix4.getRowSize(); i++) {
 		for(unsigned int j = 0; j < TestMatrix4.getColSize(); j++) {
 			//overflow check
-			BOOST_CHECK( (long long) (fabs( ( long long ) TestMatrix1.getVal(i, j) + (long long )TestMatrix2.getVal(i, j))) <= INT_MAX);
+			BOOST_CHECK( (double) (fabs( ( double ) TestMatrix1.getVal(i, j) + (double)TestMatrix2.getVal(i, j))) <= INT_MAX);
 			//computed value check
 			BOOST_CHECK(TestMatrix4.getVal(i, j) == TestMatrix3.getVal(i, j));
 		}
@@ -121,17 +121,17 @@ BOOST_AUTO_TEST_CASE (Matrix_Sum_Int) {
 BOOST_AUTO_TEST_CASE (Matrix_Sum_long_long) {
 
 	Matrix<long long> TestMatrix1(3, 2), TestMatrix2(3, 2), TestMatrix3(3, 2), TestMatrix4(3, 2);
-	TestMatrix1.setVal(0, 0, 1e18);TestMatrix1.setVal(0, 1, 2e6);
+	TestMatrix1.setVal(0, 0, (long long)1e18);TestMatrix1.setVal(0, 1, (long long)2e6);
 	TestMatrix1.setVal(1, 0, 3);TestMatrix1.setVal(1, 1, 4);
-	TestMatrix1.setVal(2, 0, 5);TestMatrix1.setVal(2, 1, 6e8);
+	TestMatrix1.setVal(2, 0, 5);TestMatrix1.setVal(2, 1, (long long)6e8);
 	
-	TestMatrix2.setVal(0, 0, 2e18);TestMatrix2.setVal(0, 1, -4e6);
+	TestMatrix2.setVal(0, 0, (long long)2e18);TestMatrix2.setVal(0, 1, -(long long)4e6);
 	TestMatrix2.setVal(1, 0,-3);TestMatrix2.setVal(1, 1, -5);
-	TestMatrix2.setVal(2, 0, 7);TestMatrix2.setVal(2, 1, 1000e8);
+	TestMatrix2.setVal(2, 0, 7);TestMatrix2.setVal(2, 1, (long long)1000e8);
 
-	TestMatrix3.setVal(0, 0, 2e18);TestMatrix3.setVal(0, 1, 2e6);
+	TestMatrix3.setVal(0, 0, (long long)2e18);TestMatrix3.setVal(0, 1, -(long long)2e6);
 	TestMatrix3.setVal(1, 0, 0);TestMatrix3.setVal(1, 1, -1);
-	TestMatrix3.setVal(2, 0, 12);TestMatrix3.setVal(2, 1, 1006e8);
+	TestMatrix3.setVal(2, 0, 12);TestMatrix3.setVal(2, 1, (long long)1006e8);
 	
 	// TestMatrix1 = {{(long long)1e18, (long long)2e6 }, {3, 4}, {5, (long long)6e8}};
 	// TestMatrix2 = {{(long long)2e18, (long long)-4e6} ,{-3 , -5} , {7, (long long)1000e8}};
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE (Matrix_Sum_long_long) {
 	for(unsigned int i = 0; i < TestMatrix4.getRowSize(); i++) {
 		for(unsigned int j = 0; j < TestMatrix4.getColSize(); j++) {
 			//overflow check
-			BOOST_CHECK( (unsigned long long) (fabs( ( unsigned long long ) TestMatrix1.getVal(i, j) + (unsigned long long )TestMatrix2.getVal(i, j))) <= LLONG_MAX);
+			BOOST_CHECK( (unsigned long long) (fabs( ( double) TestMatrix1.getVal(i, j) + (double)TestMatrix2.getVal(i, j))) <= LLONG_MAX);
 			//computed value check
 			BOOST_CHECK(TestMatrix4.getVal(i, j) == TestMatrix3.getVal(i, j));
 		}

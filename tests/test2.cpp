@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE (Matrix_Sum_int) {
 	for(int i = 0; i < TestMatrix4.row_size; i++) {
 		for(int j = 0; j < TestMatrix4.col_size; j++) {
 			//overflow check
-			BOOST_CHECK( (long long) (fabs( ( long long ) TestMatrix1.mat[i][j] + (long long )TestMatrix2.mat[i][j])) <= INT_MAX);
+			BOOST_CHECK( (double) (fabs( ( double ) TestMatrix1.mat[i][j] + ( double )TestMatrix2.mat[i][j])) <= INT_MAX);
 			//computed value check
 			BOOST_CHECK(TestMatrix4.mat[i][j] == TestMatrix3.mat[i][j]);
 		}
@@ -107,8 +107,8 @@ BOOST_AUTO_TEST_CASE (Matrix_Sum_long_long) {
 
 	Matrix<long long> TestMatrix1(3, 2), TestMatrix2(3, 2), TestMatrix3(3, 2), TestMatrix4(3, 2);
 	TestMatrix1.mat = {{(long long)1e18, (long long)2e6 }, {3, 4}, {5, (long long)6e8}};
-	TestMatrix2.mat = {{(long long)2e18, (long long)-4e6} ,{-3 , -5} , {7, (long long)1000e8}};
-	TestMatrix3.mat = {{(long long)2e18, (long long)-2e6}, {0, -1}, {12, (long long)1006e8}};
+	TestMatrix2.mat = {{(long long)2e18, -(long long)4e6} ,{-3 , -5} , {7, (long long)1000e8}};
+	TestMatrix3.mat = {{(long long)2e18, -(long long)2e6}, {0, -1}, {12, (long long)1006e8}};
 	//addition is possible dimensionally 
 	BOOST_CHECK(TestMatrix1.row_size == TestMatrix2.row_size);
 	BOOST_CHECK(TestMatrix1.col_size == TestMatrix2.col_size);
@@ -120,8 +120,8 @@ BOOST_AUTO_TEST_CASE (Matrix_Sum_long_long) {
 	for(int i = 0; i < TestMatrix4.row_size; i++) {
 		for(int j = 0; j < TestMatrix4.col_size; j++) {
 			//overflow check
-			BOOST_CHECK( (unsigned long long) (fabs( ( unsigned long long ) TestMatrix1.mat[i][j] + (unsigned long long )TestMatrix2.mat[i][j])) <= INT_MAX);
-			//computed value check
+			BOOST_CHECK( (double) (fabs( ( double ) TestMatrix1.mat[i][j] + ( double )TestMatrix2.mat[i][j])) <= LLONG_MAX);
+		
 			BOOST_CHECK(TestMatrix4.mat[i][j] == TestMatrix3.mat[i][j]);
 		}
 	}
