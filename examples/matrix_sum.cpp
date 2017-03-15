@@ -24,6 +24,7 @@ int main(int argc, char *argv) {
 
 	//multiple additions
 
+	std::cout << std::endl;
 	M4 = M1 + M2 + M3;
 
 	for(int i = 0; i < M4.getRowSize(); i++)
