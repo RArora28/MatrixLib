@@ -13,11 +13,24 @@ int main(int argc, char *argv) {
 	M3.setVal(2, 0, 31.2589);
 	Matrix<double> M2(M1);
 	Matrix<double> M4(3, 1);
+	
+	//binary additions
 	M4 = M1 + M3;
 	
 	for(int i = 0; i < M4.getRowSize(); i++)
 		for(int j = 0; j < M4.getColSize(); j++)
 			//format : ObjectName.getVal(row, col) returns the value ObjectName.mat[row][col]
 			std::cout << "value at cell " << i << ":" << j << "->" << M4.getVal(i, j) << std::endl;
-		return 0; 
+
+	//multiple additions
+
+	M4 = M1 + M2 + M3;
+
+	for(int i = 0; i < M4.getRowSize(); i++)
+		for(int j = 0; j < M4.getColSize(); j++)
+			//format : ObjectName.getVal(row, col) returns the value ObjectName.mat[row][col]
+			std::cout << "value at cell " << i << ":" << j << "->" << M4.getVal(i, j) << std::endl;
+
+ 	return 0; 
+
 }
