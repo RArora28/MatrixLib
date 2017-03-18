@@ -1,7 +1,7 @@
 #include <iostream>
 #include "../matrixv1.h"
 
-int main(int argc, char *argv) {
+int main(int argc, char **argv) {
 
 	Matrix<double> M1(3, 1);
 	Matrix<double> M3(1, 3);

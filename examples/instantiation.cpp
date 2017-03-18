@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../matrixv1.h"
 
-int main(int argc, char *argv) {
+int main(int argc, char **argv) {
 
 	//creates a matrix of size 0 X 0
 	Matrix<int> M1;
