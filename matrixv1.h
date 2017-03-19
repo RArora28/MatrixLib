@@ -1,4 +1,3 @@
-
 #ifndef MATRIXV1_INCLUDE
 #define MATRIXV1_INCLUDE
 
@@ -14,6 +13,10 @@ public:
 	Matrix ();
 	Matrix (const unsigned int r_s, const unsigned int c_s);
 	Matrix (const Matrix<ElementType> &M);
+	Matrix (Matrix<ElementType> &&M);
+
+	Matrix<ElementType> &operator = (Matrix<ElementType> &&M);
+	Matrix<ElementType> &operator = (Matrix<ElementType> &M);
 
 	ElementType getVal(const unsigned int row, const unsigned int col);
 	ElementType setVal(const unsigned int row, const unsigned int col, const ElementType value);
@@ -28,7 +31,7 @@ public:
 	friend void operator += (Matrix<ElType> &M1, const Matrix<ElType> &M2);
 	template <class ElType>
 	friend void operator *= (Matrix<ElType> &M1, const Matrix<ElType> &M2);
-		
+	
 	~Matrix();
 };
 
@@ -63,16 +66,18 @@ Matrix<ElementType>::Matrix (const Matrix<ElementType> &M)  {
 	}	 
 }
 
+template <class ElementType> 
+Matrix<ElementType>::Matrix (Matrix<ElementType> &&M)  {
+	row_size = std::move(M.row_size);
+	col_size = std::move(M.col_size);
+	mat = std::move(M.mat);	 
+}
 
 //destructor declaration
 template <class ElementType> 
 Matrix<ElementType>::~Matrix () {
-	for(unsigned int i = 0; i < row_size; i++) {
-		mat[i].clear();
-	}
 	mat.clear();
 } 
-
 
 //class functions
 template <class ElementType>
@@ -95,6 +100,26 @@ unsigned int Matrix<ElementType>::getColSize() {
 	return col_size;
 }
 
+template<class ElementType>
+Matrix<ElementType>& Matrix<ElementType>::operator = (Matrix<ElementType> &&M) {
+    row_size = std::move(M.row_size);
+    col_size = std::move(M.col_size);
+    mat = std::move(M.mat);
+    std::cout << "move assigned" << std::endl;
+    return *this;
+}
+
+template<class ElementType>
+Matrix<ElementType>& Matrix<ElementType>::operator = (Matrix<ElementType> &M) {
+    row_size = M.row_size;
+    col_size = M.col_size;
+    for(unsigned int i = 0; i < row_size; i++) {
+    	for(unsigned int j = 0; j < row_size; j++) {
+    		mat[i][j] = M.mat[i][j];
+    	}
+    }
+    return *this;
+}
 
 //friend functions
 template <class ElementType>
@@ -170,7 +195,6 @@ inline void operator*=(Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
     }
     M1.mat.clear();
 
-
     M1.mat.resize(r);
     M1.row_size = r;
     M1.col_size = c;
@@ -184,6 +208,19 @@ inline void operator*=(Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
     	}
     }
 	return;
+}
+
+template <class ElementType> 
+ElementType trace(Matrix<ElementType> &M) {
+	auto t = 0;
+	if( M.getRowSize() != M.getColSize()) {
+		std::cerr << "Trace not defined for non-square matrices" << std::endl;
+		return 0;
+	}
+	for(unsigned int i = 0; i < M.getRowSize(); i++) {
+		t += M.getVal(i, i);
+	}
+	return t;
 }
 
 #endif
