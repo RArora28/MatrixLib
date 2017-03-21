@@ -1,3 +1,10 @@
+/*  
+	Boost Competency Test (Gsoc '17)
+	Author : Rishabh Arora
+	Institute: IIIT Hyderabad
+*/
+
+
 #ifndef MATRIXV1_INCLUDE
 #define MATRIXV1_INCLUDE
 
@@ -41,12 +48,17 @@ public:
 	~Matrix();
 };
 
-//constructor declarations
+/* constructor declarations */
+/* empty matrix initialised */
 template <class ElementType>
 Matrix<ElementType>::Matrix () {
 	row_size = col_size = 0;
 }
 
+/*
+	set the dimensions of the matrix 
+	all values are set to 0
+*/
 template <class ElementType>
 Matrix<ElementType>::Matrix (const unsigned int r_s, const unsigned int c_s) {
 	row_size = r_s;
@@ -57,6 +69,11 @@ Matrix<ElementType>::Matrix (const unsigned int r_s, const unsigned int c_s) {
 	}
 }
 
+/* 
+	copy constructor 
+	deepcopy performed
+	Additional time of O(row*col) used
+*/
 template <class ElementType> 
 Matrix<ElementType>::Matrix (const Matrix<ElementType> &M)  {
 	row_size = M.row_size;
@@ -72,6 +89,10 @@ Matrix<ElementType>::Matrix (const Matrix<ElementType> &M)  {
 	}	 
 }
 
+/*
+	move constructor: moves the rhs value to the matrix
+	O(1) time complexity
+*/
 template <class ElementType> 
 Matrix<ElementType>::Matrix (Matrix<ElementType> &&M)  {
 	row_size = std::move(M.row_size);
@@ -79,33 +100,35 @@ Matrix<ElementType>::Matrix (Matrix<ElementType> &&M)  {
 	mat = std::move(M.mat);	 
 }
 
-//destructor declaration
+/* destructor declaration */
 template <class ElementType> 
 Matrix<ElementType>::~Matrix () {
 	mat.clear();
 } 
 
-//class functions
+/* Class functions */
 template <class ElementType>
 ElementType Matrix<ElementType>::getVal(const unsigned int row, const unsigned int col) {
 	return mat[row][col];
 }  
-
 template <class ElementType>
 ElementType Matrix<ElementType>::setVal(const unsigned int row, const unsigned int col, const ElementType value) {
 	return mat[row][col] = value;
 }
-
 template <class ElementType>
 unsigned int Matrix<ElementType>::getRowSize() {
 	return row_size;
 }
-
 template <class ElementType>
 unsigned int Matrix<ElementType>::getColSize() {
 	return col_size;
 }
 
+
+/* 
+	Move Assignment operator
+	O(1) time complexity
+*/
 template<class ElementType>
 Matrix<ElementType>& Matrix<ElementType>::operator = (Matrix<ElementType> &&M) {
     row_size = std::move(M.row_size);
@@ -114,6 +137,10 @@ Matrix<ElementType>& Matrix<ElementType>::operator = (Matrix<ElementType> &&M) {
     return *this;
 }
 
+/*
+	Copy Assignment operator
+	performs deepcopy : O(row*col) time complexity
+*/
 template<class ElementType>
 Matrix<ElementType>& Matrix<ElementType>::operator = (Matrix<ElementType> &M) {
     row_size = M.row_size;
@@ -126,10 +153,10 @@ Matrix<ElementType>& Matrix<ElementType>::operator = (Matrix<ElementType> &M) {
     return *this;
 }
 
-//friend functions
+/* friend functions*/
+/* returns -1*Matrix */
 template <class ElementType>
 Matrix<ElementType> operator- (const Matrix<ElementType> &M) {
-	//alocating O(row*col) additional memory to find the resultant
 	Matrix<ElementType> res(M.row_size, M.col_size);
 	for(unsigned int i = 0; i < M.row_size; i++) {
 		for(unsigned int j = 0; j < M.col_size; j++) {
@@ -139,14 +166,16 @@ Matrix<ElementType> operator- (const Matrix<ElementType> &M) {
 	return res;
 }
 
+/* 
+	operator overloaded for matrix addition
+	returns Matrix1 + Matrix2
+*/
 template <class ElementType>
 Matrix<ElementType> operator+ (const Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
-	//to check wheter the matrices have same dimensions
+	/*to check wheter the matrices have same dimensions*/
 	if(M1.row_size != M2.row_size || M1.col_size != M2.col_size) {
-		//std::cerr << "Failed: Invalid matrix dimensions for addition" << std::endl;
 		return M1;
 	}
-	//alocating O(row*col) additional memory to find the resultant
 	Matrix<ElementType> res(M1.row_size, M1.col_size);
 	for(unsigned int i = 0; i < M1.row_size; i++) {
 		for(unsigned int j = 0; j < M1.col_size; j++) {
@@ -156,14 +185,16 @@ Matrix<ElementType> operator+ (const Matrix<ElementType> &M1, const Matrix<Eleme
 	return res;
 }
 
+/* 
+	operator overloaded for matrix subtraction
+	returns Matrix1 - Matrix2
+*/
 template <class ElementType>
 Matrix<ElementType> operator- (const Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
-	//to check wheter the matrices have same dimensions
+	/*to check wheter the matrices have same dimensions*/
 	if(M1.row_size != M2.row_size || M1.col_size != M2.col_size) {
-		std::cerr << "Failed: Invalid matrix dimensions for addition" << std::endl;
 		return M1;
 	}
-	//alocating O(row*col) additional memory to find the resultant
 	Matrix<ElementType> res(M1.row_size, M1.col_size);
 	for(unsigned int i = 0; i < M1.row_size; i++) {
 		for(unsigned int j = 0; j < M1.col_size; j++) {
@@ -173,15 +204,17 @@ Matrix<ElementType> operator- (const Matrix<ElementType> &M1, const Matrix<Eleme
 	return res;
 }
 
+/* 
+	operator overloaded for matrix multiplication
+	returns Matrix1 * Matrix2
+*/
 template <class ElementType>
 Matrix<ElementType> operator* (const Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
-	//to check if matrix multiplication is dimensionally possible
+	/* to check if matrix multiplication is dimensionally possible */
 	if( M1.col_size != M2.row_size) {
-		//std::cerr << "Failed: Invalid matrix dimensions for multiplication" << std::endl;
 		return M1;
 	}
-	//alocating O(row*col) additional memory to find the resultant
-	//O(n^3) time complexity
+	/* O(M1.row * M1.col * M2.col) time complexity */
 	Matrix<ElementType> res(M1.row_size, M2.col_size);
 	for (unsigned int i = 0; i < M1.row_size; i++) {
 	    for (unsigned int j = 0; j < M2.col_size; j++) {
@@ -193,11 +226,14 @@ Matrix<ElementType> operator* (const Matrix<ElementType> &M1, const Matrix<Eleme
     return res;
 }
 
+/* 
+	operator overloaded for matrix self addition
+	performs Matrix1 = Matrix1 + Matrix2
+*/
 template <class ElementType>
 void operator+= (Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
-	//to check wheter the matrices have same dimensions
+	/* to check wheter the matrices have same dimensions */
 	if(M1.row_size != M2.row_size || M1.col_size != M2.col_size) {
-		//std::cerr << "Failed: Invalid matrix dimensions for addition" << std::endl;
 		return;
 	}
 	for(unsigned int i = 0; i < M1.row_size; i++) {
@@ -208,11 +244,14 @@ void operator+= (Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
 	return;
 }
 
+/* 
+	operator overloaded for matrix self subtraction
+	performs Matrix1 = Matrix1 - Matrix2
+*/
 template <class ElementType>
 void operator-= (Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
-	//to check wheter the matrices have same dimensions
+	/* to check wheter the matrices have same dimensions */
 	if(M1.row_size != M2.row_size || M1.col_size != M2.col_size) {
-		std::cerr << "Failed: Invalid matrix dimensions for addition" << std::endl;
 		return;
 	}
 	for(unsigned int i = 0; i < M1.row_size; i++) {
@@ -223,12 +262,17 @@ void operator-= (Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
 	return;
 }
 
+/* 
+	operator overloaded for matrix self multiplication
+	performs Matrix1 = Matrix1 * Matrix2
+*/
 template <class ElementType>
 inline void operator*=(Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
-	//to check wheter the matrices have same dimensions
-	if(M1.col_size != M2.row_size)
+	/* to check wheter the matrices have same dimensions */
+	if(M1.col_size != M2.row_size) {
 		return;
-	//alocating O(row*col) additional memory to find the resultant
+	}
+	/* alocating O(row*col) additional memory to find the resultant */
 	Matrix<ElementType> res(M1.row_size, M2.col_size);
 	for (unsigned int i = 0; i < M1.row_size; i++) {
 	    for (unsigned int j = 0; j < M2.col_size; j++) {
@@ -237,20 +281,17 @@ inline void operator*=(Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
                 res.mat[i][j] += M1.mat[i][k] * M2.mat[k][j];
         }
     }
-    
     unsigned int r = M1.row_size, c = M2.col_size;
     for(unsigned int i = 0; i < M1.row_size; i++) {
     	M1.mat[i].clear();
     }
     M1.mat.clear();
-
     M1.mat.resize(r);
     M1.row_size = r;
     M1.col_size = c;
     for(unsigned int i = 0; i < r; i++) {
     	M1.mat[i].resize(c);
     }
-    
     for(unsigned int i = 0; i < M1.row_size; i++) {
     	for(unsigned int j = 0; j < M1.col_size; j++) {
     		M1.mat[i][j] = res.mat[i][j];
@@ -258,12 +299,11 @@ inline void operator*=(Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
     }
 	return;
 }
-
+/* returns Trace: sum of the body diagnol elements of a square matrix */
 template <class ElementType> 
 ElementType trace(Matrix<ElementType> &M) {
 	auto t = 0;
 	if( M.getRowSize() != M.getColSize()) {
-		std::cerr << "Trace not defined for non-square matrices" << std::endl;
 		return 0;
 	}
 	for(unsigned int i = 0; i < M.getRowSize(); i++) {
