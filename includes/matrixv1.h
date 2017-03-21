@@ -14,7 +14,7 @@ template <class ElementType>
 class Matrix {
 private:
 	unsigned int row_size, col_size;
-	std::vector< std::vector <ElementType > > mat;
+	std::vector< std::vector < ElementType > > mat;
 
 public:
 	Matrix ();
