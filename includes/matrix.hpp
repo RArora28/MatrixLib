@@ -5,8 +5,8 @@
 */
 
 
-#ifndef MATRIXV1_INCLUDE
-#define MATRIXV1_INCLUDE
+#ifndef _MATRIX_HPP
+#define _MATRIX_HPP
 
 #include <vector>
 

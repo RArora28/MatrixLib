@@ -12,7 +12,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <iostream>
-#include "../matrixv1.h"
+#include "../includes/matrix.hpp"
 #include <typeinfo>
 #include <string>
 #include <complex.h>
