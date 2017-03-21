@@ -24,11 +24,17 @@ public:
 	unsigned int getColSize();
 
 	template <class ElType>
+	friend Matrix<ElType> operator - (const Matrix<ElType> &M1);
+	template <class ElType>
 	friend Matrix<ElType> operator + (const Matrix<ElType> &M1, const Matrix<ElType> &M2);
+	template <class ElType>
+	friend Matrix<ElType> operator - (const Matrix<ElType> &M1, const Matrix<ElType> &M2);
 	template <class ElType>
 	friend Matrix<ElType> operator * (const Matrix<ElType> &M1, const Matrix<ElType> &M2);
 	template <class ElType>
 	friend void operator += (Matrix<ElType> &M1, const Matrix<ElType> &M2);
+	template <class ElType>
+	friend void operator -= (Matrix<ElType> &M1, const Matrix<ElType> &M2);
 	template <class ElType>
 	friend void operator *= (Matrix<ElType> &M1, const Matrix<ElType> &M2);
 	
@@ -105,7 +111,6 @@ Matrix<ElementType>& Matrix<ElementType>::operator = (Matrix<ElementType> &&M) {
     row_size = std::move(M.row_size);
     col_size = std::move(M.col_size);
     mat = std::move(M.mat);
-    std::cout << "move assigned" << std::endl;
     return *this;
 }
 
@@ -123,10 +128,22 @@ Matrix<ElementType>& Matrix<ElementType>::operator = (Matrix<ElementType> &M) {
 
 //friend functions
 template <class ElementType>
+Matrix<ElementType> operator- (const Matrix<ElementType> &M) {
+	//alocating O(row*col) additional memory to find the resultant
+	Matrix<ElementType> res(M.row_size, M.col_size);
+	for(unsigned int i = 0; i < M.row_size; i++) {
+		for(unsigned int j = 0; j < M.col_size; j++) {
+			res.mat[i][j] = -M.mat[i][j];
+		}
+	}
+	return res;
+}
+
+template <class ElementType>
 Matrix<ElementType> operator+ (const Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
 	//to check wheter the matrices have same dimensions
 	if(M1.row_size != M2.row_size || M1.col_size != M2.col_size) {
-		std::cerr << "Failed: Invalid matrix dimensions for addition" << std::endl;
+		//std::cerr << "Failed: Invalid matrix dimensions for addition" << std::endl;
 		return M1;
 	}
 	//alocating O(row*col) additional memory to find the resultant
@@ -140,10 +157,27 @@ Matrix<ElementType> operator+ (const Matrix<ElementType> &M1, const Matrix<Eleme
 }
 
 template <class ElementType>
+Matrix<ElementType> operator- (const Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
+	//to check wheter the matrices have same dimensions
+	if(M1.row_size != M2.row_size || M1.col_size != M2.col_size) {
+		std::cerr << "Failed: Invalid matrix dimensions for addition" << std::endl;
+		return M1;
+	}
+	//alocating O(row*col) additional memory to find the resultant
+	Matrix<ElementType> res(M1.row_size, M1.col_size);
+	for(unsigned int i = 0; i < M1.row_size; i++) {
+		for(unsigned int j = 0; j < M1.col_size; j++) {
+			res.mat[i][j] = M1.mat[i][j] - M2.mat[i][j];
+		}
+	}
+	return res;
+}
+
+template <class ElementType>
 Matrix<ElementType> operator* (const Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
 	//to check if matrix multiplication is dimensionally possible
 	if( M1.col_size != M2.row_size) {
-		std::cerr << "Failed: Invalid matrix dimensions for multiplication" << std::endl;
+		//std::cerr << "Failed: Invalid matrix dimensions for multiplication" << std::endl;
 		return M1;
 	}
 	//alocating O(row*col) additional memory to find the resultant
@@ -163,12 +197,27 @@ template <class ElementType>
 void operator+= (Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
 	//to check wheter the matrices have same dimensions
 	if(M1.row_size != M2.row_size || M1.col_size != M2.col_size) {
-		std::cerr << "Failed: Invalid matrix dimensions for addition" << std::endl;
+		//std::cerr << "Failed: Invalid matrix dimensions for addition" << std::endl;
 		return;
 	}
 	for(unsigned int i = 0; i < M1.row_size; i++) {
 		for(unsigned int j = 0; j < M1.col_size; j++) {
 			M1.mat[i][j] = M1.mat[i][j] + M2.mat[i][j];
+		}
+	}
+	return;
+}
+
+template <class ElementType>
+void operator-= (Matrix<ElementType> &M1, const Matrix<ElementType> &M2) {
+	//to check wheter the matrices have same dimensions
+	if(M1.row_size != M2.row_size || M1.col_size != M2.col_size) {
+		std::cerr << "Failed: Invalid matrix dimensions for addition" << std::endl;
+		return;
+	}
+	for(unsigned int i = 0; i < M1.row_size; i++) {
+		for(unsigned int j = 0; j < M1.col_size; j++) {
+			M1.mat[i][j] = M1.mat[i][j] - M2.mat[i][j];
 		}
 	}
 	return;
