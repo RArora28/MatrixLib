@@ -50,6 +50,8 @@ public:
 
 	template <class T>
 	inline Matrix<ElementType>& operator = (const Expression<T>& _x);
+	template <class T>
+	inline void operator += (const Expression<T>& _x);
 
 	ElementType getVal(unsigned int row,unsigned int col);
 	ElementType setVal(const unsigned int row, const unsigned int col, const ElementType value);
@@ -140,6 +142,22 @@ inline Matrix<ElementType>& Matrix<ElementType>::operator = (const Expression<T>
     mat = x.Eval();
     return *this;
 }
+
+template <class ElementType>
+template <class T>
+inline void Matrix<ElementType>::operator += (const Expression<T>& _x) {
+	const T& x = _x.self();
+    std::vector<std::vector<ElementType> > X = x.Eval();
+    for (unsigned int i = 0; i < row_size; i++) {
+    	for(unsigned int j = 0; j < col_size; j++){
+    		mat[i][j] += X[i][j];
+    	}    
+    }
+
+    return;
+}
+
+
 
 
 /* constructor declarations */
