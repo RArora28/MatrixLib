@@ -4,8 +4,9 @@
 	Institute: IIIT Hyderabad
 */
 
-/*
-	Uses expression templates for Matrix operations like + and *
+/**
+  * Uses expression templates for Matrix operations like + and *
+  *Lazy / delayed evaluation of expressions
 */
 
 #ifndef _TEMP_HPP
@@ -67,24 +68,28 @@ class add{
 public: 
   template < class T>
   inline static std::vector < std::vector < T> > op(std::vector < std::vector < T> > a, std::vector < std::vector < T> > b) {
-    std::vector < std::vector < T > > X;
-    /* Dimension Check */
-    if (a.size() != b.size() || a[0].size() != b[0].size()) {
-    	std::cerr << "Invalid Operation: Incompatible dimensions for Matrix Addition" << std::endl;
-    	return X;
-    }
+    
+    // Lambda for matrix addition and dimension check
 
-   	X.resize(a.size());
-   	for (unsigned int i = 0; i < a.size(); i++) {
-   		X[i].resize(a[0].size());
-   	}
+    auto Mat_add = [](auto a, auto b){ 
+	    std::vector < std::vector < T > > X;
+	    if (a.size() != b.size() || a[0].size() != b[0].size()) {
+	    	std::cerr << "Invalid Operation: Incompatible dimensions for Matrix Addition" << std::endl;
+	    	return X;
+	    }
+	   	X.resize(a.size());
+	   	for (unsigned int i = 0; i < a.size(); i++) {
+	   		X[i].resize(a[0].size());
+	   	}
+	   	for (unsigned int i = 0; i < a.size(); i++) {
+	   		for(unsigned int j = 0; j < a[0].size(); j++) {
+	   			X[i][j] = a[i][j] + b[i][j];
+	    	}
+	   	}
+		return X;
+	};
 
-   	for (unsigned int i = 0; i < a.size(); i++) {
-   		for(unsigned int j = 0; j < a[0].size(); j++) {
-   			X[i][j] = a[i][j] + b[i][j];
-   		}
-   	}
-	return X;
+	return Mat_add(a, b);
   }
 };
 
@@ -92,27 +97,32 @@ class mul{
 public: 
   template < class T>
   inline static std::vector < std::vector < T> > op(std::vector < std::vector < T> > a, std::vector < std::vector < T> > b) {
-    std::vector < std::vector < T > > X;
-    /* Dimension Check */
-    if (a[0].size() != b.size()) {
-    	std::cerr << "Invalid Operation: Incompatible dimensions for Matrix Multiplication" << std::endl;
-    	return X;
-    }
+    
+    // Lambda for multiplicatoin tadded
+    auto Mat_mul = [](auto a, auto b) {
+	    std::vector < std::vector < T > > X;
+	    /* Dimension Check */
+	    if (a[0].size() != b.size()) {
+	    	std::cerr << "Invalid Operation: Incompatible dimensions for Matrix Multiplication" << std::endl;
+	    	return X;
+	    }
 
-   	X.resize(a.size());
-   	for (unsigned int i = 0; i < a.size(); i++) {
-   		X[i].resize(b[0].size());
-   	}
-		
-   	for (unsigned int i = 0; i < a.size(); i++) {
-	    for (unsigned int j = 0; j < b[0].size(); j++) {
-		    X[i][j] = 0;
-            for (unsigned int k = 0; k < a.size(); k++)
-                X[i][j] += a[i][k] * b[k][j];
-        }
-    }
+	   	X.resize(a.size());
+	   	for (unsigned int i = 0; i < a.size(); i++) {
+	   		X[i].resize(b[0].size());
+	   	}
+			
+	   	for (unsigned int i = 0; i < a.size(); i++) {
+		    for (unsigned int j = 0; j < b[0].size(); j++) {
+			    X[i][j] = 0;
+	            for (unsigned int k = 0; k < a.size(); k++)
+	                X[i][j] += a[i][k] * b[k][j];
+	        }
+	    }
 
-	return X;
+		return X;
+	};
+	return Mat_mul(a, b);
   }
 };
 
@@ -143,11 +153,15 @@ inline Matrix<ElementType>& Matrix<ElementType>::operator = (const Expression<T>
     return *this;
 }
 
+/* Operator for += in Matrices */
 template <class ElementType>
 template <class T>
 inline void Matrix<ElementType>::operator += (const Expression<T>& _x) {
+	
 	const T& x = _x.self();
     std::vector<std::vector<ElementType> > X = x.Eval();
+    
+
     for (unsigned int i = 0; i < row_size; i++) {
     	for(unsigned int j = 0; j < col_size; j++){
     		mat[i][j] += X[i][j];
@@ -156,9 +170,6 @@ inline void Matrix<ElementType>::operator += (const Expression<T>& _x) {
 
     return;
 }
-
-
-
 
 /* constructor declarations */
 /* empty matrix initialised */
@@ -180,7 +191,6 @@ Matrix<ElementType>::Matrix (const unsigned int r_s, const unsigned int c_s) {
 		mat[i].resize(col_size);
 	}
 }
-
 /* 
 	copy constructor 
 	deepcopy performed
