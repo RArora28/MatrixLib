@@ -1,10 +1,19 @@
 ## **Matrix Library** 
 ### (Implemented the following as the competency test for **Boost.uBLAS** Gsoc '17)
 
+
 It uses **C++** features:
  * Expression Templates
  * Move Constructor and Move assignment operators (C++ 11 onwards)
-
+ 
+Files: 
+  * **matrix.hpp**: Normal implementation using class templates and move semantics.
+  * **matrixv2.hpp**: Expression evalutated by constructing an expression template.
+  
+Highlights:
+  * **Expression Templates**: Reduce the run time substantially by creating expression templates and avoiding temporary memory allocation and virtual function calls
+  * **Generic Lambdas**: unnamed functions used instead of functions
+  * **Move Semantics**: Move assignment and Move constructor (matrix.hpp) used which move the rhs value directly to the destination avoiding costly deepcopy 
 
 ### Functions Supported :
   1. #### **Create Matrices** :
