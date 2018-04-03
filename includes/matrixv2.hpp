@@ -37,28 +37,28 @@ public:
   }
 };
 
-template <class ElementType>
-class Matrix : public Expression < Matrix < ElementType > >{
+template <class T>
+class Matrix : public Expression < Matrix < T > >{
 private:
-	unsigned int row_size, col_size;
-	std::vector< std::vector < ElementType > > mat;
+	size_t row_size, col_size;
+	std::vector< std::vector < T > > mat;
 
 public:
 	Matrix ();
-	Matrix (const unsigned int r_s, const unsigned int c_s);
-	Matrix (const Matrix<ElementType> &M);
-	Matrix (Matrix<ElementType> &&M);
+	Matrix (const size_t r_s, const size_t c_s);
+	Matrix (const Matrix<T> &M);
+	Matrix (Matrix<T> &&M);
 
 	template <class T>
-	inline Matrix<ElementType>& operator = (const Expression<T>& _x);
+	inline Matrix<T>& operator = (const Expression<T>& _x);
 	template <class T>
 	inline void operator += (const Expression<T>& _x);
 
-	ElementType getVal(unsigned int row,unsigned int col);
-	ElementType setVal(const unsigned int row, const unsigned int col, const ElementType value);
-	unsigned int getRowSize();
-	unsigned int getColSize();
-	std::vector<std::vector < ElementType > > Eval () const;
+	T getVal(size_t row,size_t col);
+	T setVal(const size_t row, const size_t col, const T value);
+	size_t getRowSize();
+	size_t getColSize();
+	std::vector<std::vector < T > > Eval () const;
 
 	~Matrix();
 };
@@ -78,11 +78,11 @@ public:
 	    	return X;
 	    }
 	   	X.resize(a.size());
-	   	for (unsigned int i = 0; i < a.size(); i++) {
+	   	for (size_t i = 0; i < a.size(); i++) {
 	   		X[i].resize(a[0].size());
 	   	}
-	   	for (unsigned int i = 0; i < a.size(); i++) {
-	   		for(unsigned int j = 0; j < a[0].size(); j++) {
+	   	for (size_t i = 0; i < a.size(); i++) {
+	   		for(size_t j = 0; j < a[0].size(); j++) {
 	   			X[i][j] = a[i][j] + b[i][j];
 	    	}
 	   	}
@@ -108,14 +108,14 @@ public:
 	    }
 
 	   	X.resize(a.size());
-	   	for (unsigned int i = 0; i < a.size(); i++) {
+	   	for (size_t i = 0; i < a.size(); i++) {
 	   		X[i].resize(b[0].size());
 	   	}
 			
-	   	for (unsigned int i = 0; i < a.size(); i++) {
-		    for (unsigned int j = 0; j < b[0].size(); j++) {
+	   	for (size_t i = 0; i < a.size(); i++) {
+		    for (size_t j = 0; j < b[0].size(); j++) {
 			    X[i][j] = 0;
-	            for (unsigned int k = 0; k < a.size(); k++)
+	            for (size_t k = 0; k < a.size(); k++)
 	                X[i][j] += a[i][k] * b[k][j];
 	        }
 	    }
@@ -145,25 +145,25 @@ inline BinaryOP<mul, E1, E2> operator* (const Expression<E1>& l, const Expressio
   return operate<mul>(l, r);
 }
 
-template <class ElementType>
 template <class T>
-inline Matrix<ElementType>& Matrix<ElementType>::operator = (const Expression<T>& _x) {
+template <class T>
+inline Matrix<T>& Matrix<T>::operator = (const Expression<T>& _x) {
 	const T& x = _x.self();
     mat = x.Eval();
     return *this;
 }
 
 /* Operator for += in Matrices */
-template <class ElementType>
 template <class T>
-inline void Matrix<ElementType>::operator += (const Expression<T>& _x) {
+template <class T>
+inline void Matrix<T>::operator += (const Expression<T>& _x) {
 	
 	const T& x = _x.self();
-    std::vector<std::vector<ElementType> > X = x.Eval();
+    std::vector<std::vector<T> > X = x.Eval();
     
 
-    for (unsigned int i = 0; i < row_size; i++) {
-    	for(unsigned int j = 0; j < col_size; j++){
+    for (size_t i = 0; i < row_size; i++) {
+    	for(size_t j = 0; j < col_size; j++){
     		mat[i][j] += X[i][j];
     	}    
     }
@@ -173,8 +173,8 @@ inline void Matrix<ElementType>::operator += (const Expression<T>& _x) {
 
 /* constructor declarations */
 /* empty matrix initialised */
-template <class ElementType>
-Matrix<ElementType>::Matrix () {
+template <class T>
+Matrix<T>::Matrix () {
 	row_size = col_size = 0;
 }
 
@@ -182,12 +182,12 @@ Matrix<ElementType>::Matrix () {
 	set the dimensions of the matrix 
 	all values are set to 0
 */
-template <class ElementType>
-Matrix<ElementType>::Matrix (const unsigned int r_s, const unsigned int c_s) {
+template <class T>
+Matrix<T>::Matrix (const size_t r_s, const size_t c_s) {
 	row_size = r_s;
 	col_size = c_s;
 	mat.resize(row_size);
-	for(unsigned int i = 0; i < row_size; i++) {
+	for(size_t i = 0; i < row_size; i++) {
 		mat[i].resize(col_size);
 	}
 }
@@ -196,46 +196,46 @@ Matrix<ElementType>::Matrix (const unsigned int r_s, const unsigned int c_s) {
 	deepcopy performed
 	Additional time of O(row*col) used
 */
-template <class ElementType> 
-Matrix<ElementType>::Matrix (const Matrix<ElementType> &M)  {
+template <class T> 
+Matrix<T>::Matrix (const Matrix<T> &M)  {
 	row_size = M.row_size;
 	col_size = M.col_size;
 	mat.resize(row_size);
-	for(unsigned int i = 0; i < row_size; i++) {
+	for(size_t i = 0; i < row_size; i++) {
 		mat[i].resize(col_size);
 	}
-	for(unsigned int i = 0; i < row_size; i++) {
-		for(unsigned int j = 0; j < col_size; j++) {
+	for(size_t i = 0; i < row_size; i++) {
+		for(size_t j = 0; j < col_size; j++) {
 			mat[i][j] = M.mat[i][j];
 		}
 	}	 
 }
 
 /* destructor declaration */
-template <class ElementType> 
-Matrix<ElementType>::~Matrix () {
+template <class T> 
+Matrix<T>::~Matrix () {
 	mat.clear();
 } 
 
 /* Matrix: Class functions */
-template <class ElementType>
-ElementType Matrix<ElementType>::getVal(const unsigned int row, const unsigned int col) {
+template <class T>
+T Matrix<T>::getVal(const size_t row, const size_t col) {
 	return mat[row][col];
 }  
-template <class ElementType>
-ElementType Matrix<ElementType>::setVal(const unsigned int row, const unsigned int col, const ElementType value) {
+template <class T>
+T Matrix<T>::setVal(const size_t row, const size_t col, const T value) {
 	return mat[row][col] = value;
 }
-template <class ElementType>
-unsigned int Matrix<ElementType>::getRowSize() {
+template <class T>
+size_t Matrix<T>::getRowSize() {
 	return row_size;
 }
-template <class ElementType>
-unsigned int Matrix<ElementType>::getColSize() {
+template <class T>
+size_t Matrix<T>::getColSize() {
 	return col_size;
 }
-template <class ElementType>
-std::vector<std::vector < ElementType> > Matrix<ElementType>::Eval() const {
+template <class T>
+std::vector<std::vector < T> > Matrix<T>::Eval() const {
 	return mat;
 }
 

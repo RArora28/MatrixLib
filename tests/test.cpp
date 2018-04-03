@@ -27,10 +27,10 @@ BOOST_AUTO_TEST_CASE (constructors_working) {
 	
 	//resizes the matrix dimensions
 	Matrix<int> TestMatrix2(5, 3);
-	BOOST_CHECK((unsigned int)TestMatrix2.getRowSize() == TestMatrix2.getRowSize());
+	BOOST_CHECK((size_t)TestMatrix2.getRowSize() == TestMatrix2.getRowSize());
 	BOOST_CHECK( (TestMatrix2.getRowSize() == 5) && (TestMatrix2.getColSize() == 3) );
-	// for(unsigned int i = 0; i < 5; i++) {
-	// 	BOOST_CHECK((unsigned int)TestMatrix2.mat[i].size() == TestMatrix2.getColSize());
+	// for(size_t i = 0; i < 5; i++) {
+	// 	BOOST_CHECK((size_t)TestMatrix2.mat[i].size() == TestMatrix2.getColSize());
 	// }
 	//copy constructor
 	Matrix<int> TestMatrix3(2, 2);
@@ -41,11 +41,11 @@ BOOST_AUTO_TEST_CASE (constructors_working) {
 	Matrix<int> TestMatrix4(TestMatrix3);
 	BOOST_CHECK( TestMatrix4.getRowSize() == TestMatrix4.getRowSize());
 	BOOST_CHECK( (TestMatrix4.getRowSize() == 2) && (TestMatrix4.getColSize() == 2) );
-	// for(unsigned int i = 0; i < 2; i++) {
-	// 	BOOST_CHECK((unsigned int)TestMatrix4.mat[i].size() == TestMatrix4.getColSize());
+	// for(size_t i = 0; i < 2; i++) {
+	// 	BOOST_CHECK((size_t)TestMatrix4.mat[i].size() == TestMatrix4.getColSize());
 	// }
-	for(unsigned int i = 0; i < 2; i++) {
-		for(unsigned int j = 0; j < 2; j++) {
+	for(size_t i = 0; i < 2; i++) {
+		for(size_t j = 0; j < 2; j++) {
 			//std::cout << TestMatrix4.getVal(i, j) << ' ' << TestMatrix3.getVal(i, j) << std::endl;
 			BOOST_CHECK(TestMatrix3.getVal(i, j) == TestMatrix4.getVal(i, j));		}
 	}
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE(VariableType)
 BOOST_AUTO_TEST_CASE (type_check) {
 	
-	//unsigned int is accepted
+	//size_t is accepted
 	Matrix<int> M(1,1);
 	M.setVal(0, 0, 1);
 	std::string type = typeid(M.getVal(0, 0)).name();
@@ -109,8 +109,8 @@ BOOST_AUTO_TEST_CASE (Matrix_Sum_Int) {
 
 	TestMatrix4 = TestMatrix1 + TestMatrix2;
 
-	for(unsigned int i = 0; i < TestMatrix4.getRowSize(); i++) {
-		for(unsigned int j = 0; j < TestMatrix4.getColSize(); j++) {
+	for(size_t i = 0; i < TestMatrix4.getRowSize(); i++) {
+		for(size_t j = 0; j < TestMatrix4.getColSize(); j++) {
 			//overflow check
 			BOOST_CHECK( (double) (fabs( ( double ) TestMatrix1.getVal(i, j) + (double)TestMatrix2.getVal(i, j))) <= INT_MAX);
 			//computed value check
@@ -144,8 +144,8 @@ BOOST_AUTO_TEST_CASE (Matrix_Sum_long_long) {
 
 	TestMatrix4 = TestMatrix1 + TestMatrix2;
 
-	for(unsigned int i = 0; i < TestMatrix4.getRowSize(); i++) {
-		for(unsigned int j = 0; j < TestMatrix4.getColSize(); j++) {
+	for(size_t i = 0; i < TestMatrix4.getRowSize(); i++) {
+		for(size_t j = 0; j < TestMatrix4.getColSize(); j++) {
 			//overflow check
 			BOOST_CHECK( (unsigned long long) (fabs( ( double) TestMatrix1.getVal(i, j) + (double)TestMatrix2.getVal(i, j))) <= LLONG_MAX);
 			//computed value check
@@ -169,8 +169,8 @@ BOOST_AUTO_TEST_CASE (Matrix_Sum_float) {
 
 	TestMatrix4 = TestMatrix1 + TestMatrix2;
 
-	for(unsigned int i = 0; i < TestMatrix4.getRowSize(); i++) {
-		for(unsigned int j = 0; j < TestMatrix4.getColSize(); j++) {
+	for(size_t i = 0; i < TestMatrix4.getRowSize(); i++) {
+		for(size_t j = 0; j < TestMatrix4.getColSize(); j++) {
 			//overflow check
 			BOOST_CHECK( (double) (fabs( ( double ) TestMatrix1.getVal(i, j) + ( double )TestMatrix2.getVal(i, j))) <= (3.40282347e+38F));
 			//computed value check
@@ -203,8 +203,8 @@ BOOST_AUTO_TEST_CASE (Matrix_Sum_complex) {
 
 	TestMatrix4 = TestMatrix1 + TestMatrix2;
 
-	for(unsigned int i = 0; i < TestMatrix4.getRowSize(); i++) {
-		for(unsigned int j = 0; j < TestMatrix4.getColSize(); j++) {
+	for(size_t i = 0; i < TestMatrix4.getRowSize(); i++) {
+		for(size_t j = 0; j < TestMatrix4.getColSize(); j++) {
 			//taking a precision error of 1e-13
 			BOOST_CHECK(fabs(TestMatrix4.getVal(i, j).real() - TestMatrix3.getVal(i, j).real()) <= 1e-13);
 			BOOST_CHECK(fabs(TestMatrix4.getVal(i, j).imag() - TestMatrix3.getVal(i, j).imag()) <= 1e-13);
@@ -218,7 +218,7 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE(Matrix_Multiplication)
 BOOST_AUTO_TEST_CASE (Matrix_Multiplication_complex) {
 
-	Matrix< std::complex<unsigned int > > TestMatrix1(2, 2), TestMatrix2(2, 2), TestMatrix3(2, 2), TestMatrix4(2, 2);
+	Matrix< std::complex<size_t > > TestMatrix1(2, 2), TestMatrix2(2, 2), TestMatrix3(2, 2), TestMatrix4(2, 2);
 	TestMatrix1.setVal(0, 0, std::complex<int>(1, 1));TestMatrix1.setVal(0, 1, std::complex<int>(2, 3));
 	TestMatrix1.setVal(1, 0, std::complex<int>(1, -1));TestMatrix1.setVal(1, 1, std::complex<int>(2, -4));
 	
@@ -237,8 +237,8 @@ BOOST_AUTO_TEST_CASE (Matrix_Multiplication_complex) {
 
 	TestMatrix4 = TestMatrix1 * TestMatrix2;
 
-	for(unsigned int i = 0; i < TestMatrix4.getRowSize(); i++) {
-		for(unsigned int j = 0; j < TestMatrix4.getColSize(); j++) {
+	for(size_t i = 0; i < TestMatrix4.getRowSize(); i++) {
+		for(size_t j = 0; j < TestMatrix4.getColSize(); j++) {
 			//computed value check
 			BOOST_CHECK(TestMatrix4.getVal(i, j) == TestMatrix3.getVal(i, j));
 		}
@@ -271,8 +271,8 @@ BOOST_AUTO_TEST_CASE (Matrix_Multiplication_Int) {
 	
 	TestMatrix4 = TestMatrix1 * TestMatrix2;
 	
-	for(unsigned int i = 0; i < TestMatrix4.getRowSize(); i++) {
-		for(unsigned int j = 0; j < TestMatrix4.getColSize(); j++) {
+	for(size_t i = 0; i < TestMatrix4.getRowSize(); i++) {
+		for(size_t j = 0; j < TestMatrix4.getColSize(); j++) {
 			//computed value check
 			BOOST_CHECK(TestMatrix4.getVal(i, j) == TestMatrix3.getVal(i, j));
 		}
